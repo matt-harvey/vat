@@ -26,6 +26,8 @@ BEGIN {
 		else if (a2 ~ /^e[0-9]+$/) requested_id = edit_id = substr(a2, 2)
 		else if (a2 ~ /^[0-9]*$/)  requested_id = detail_id = a2
 		else                   { print "Unrecognized argument: " a2; exit 1 }
+	} else {
+		print ("DUE         ID SUMMARY")
 	}
 }
 
