@@ -30,17 +30,17 @@ Differences with t_:
 
 - Explicitly supports the concept of an (optional) due date for each task;
   tasks summaries are output in order of due date.
-- Task descriptions can span multiple lines, with the first line representing
-  the "summary", and optional additional lines representing the "detail".
-- Tasks are identified by an ephemeral, ad hoc number, based on their order
+- Task descriptions can span multiple lines, commencing with an optional due
+  date, then a line representing the "summary", then optional additional lines
+  representing the "detail".
+- Tasks are identified by an ephemeral, ad hoc ID number, based on their order
   in the file at a given point in time, rather by a hash.
 - Tasks aren't edited directly from the command line; rather,
   you tell ``tm`` to open Vim_ at a particular task, and then edit it using
   Vim.
 - There is no support for marking a task as completed. When it's done,
-  you delete it. (It wouldn't be hard to add support for this though... feel
-  free to contribute code to achieve this!)
-- It's implemented in about 50 lines of Awk :-)
+  you delete it.
+- It's implemented in about 30 lines of Awk :-)
 
 Requirements
 ============
@@ -67,25 +67,28 @@ Usage
 Task file format
 ----------------
 
-``tm`` processes the contents of a tasks file passed to it as its
-first command-line argument. The tasks file is a plain text file in which
+``tm`` processes the contents of the tasks file at the filepath recorded in
+``.bashrc`` as described above. The tasks file is a plain text file in which
 tasks are recorded in a certain simple format.
 
-Here is an example of the contents of a valid tasks file:
+Here is an example of that format:
 
 ::
 
-    2013-03-09 The first line can be thought of as a summary of the task.
-    The rest is the body of the task. The task needn't have a body.
+    2013-11-2
+    A date in this ISO format represents the date the task is due.
+
+    2013-03-09
+    The first non-date line can be thought of as a summary of the task.
+    The remaining is the "detail" of the task.
     Tasks are separated by blank lines.
 
-    2013-11-28 A date in this ISO format represents the date the task is due.
-    Put the date at the start of the first line.
+    This task doesn't have a due date. This is still its summary line.
+    And this line is still in its detail section,
+    as is this. Also note the tasks can be in any order in the file.
 
-    This task doesn't have a due date.
-    That's OK. Also note the tasks can be in any order in the file.
-
-    2013-09-09 A task doesn't need to have a body.
+    2013-09-09
+    A task doesn't need to have a detail section.
 
     This task has no due date and no body and that's fine.
 
