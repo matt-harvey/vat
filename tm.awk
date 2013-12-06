@@ -14,71 +14,35 @@
 # limitations under the License.
 ###
 
-###
-# USAGE:
-#
-#	tm.awk FILE
-#		Print the first line of each task in the file, with its due date and
-#       a generated identifier, ordered by due date. Tasks with no due date
-#       have a date of "0" and are listed first.
-#
-#   tm.awk FILE N
-#       Print the full text of the task with identifier N.
-#
-#	tm.awk FILE e
-#       Open FILE in vim at the first line of the tasks file.
-#
-#   tm.awk FILE eN
-#       Open FILE in vim, at the task with identifier N.
-###
-
-/usr/bin/env awk '
+awk '
 
 BEGIN {
 	RS = ""; FS = "\n"
-	task_to_fully_print = -1
-	task_to_edit = -1
+	requested_id = detail_id = edit_id = -1
+	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) */
 	if (ARGC > 2) {
-		if (ARGV[2] ~ /^e$/) {
-			exit system(sprintf("vim +0 %s", ARGV[1]))
-		} else if (ARGV[2] ~ /^e/) {
-			task_to_edit = substr(ARGV[2], 2)
-		} else {
-			task_to_fully_print = ARGV[2]
-		}
+		a2 = ARGV[2]
+		if (a2 ~ /^e$/)            exit system(sprintf("vim +0 %s", ARGV[1]))
+		else if (a2 ~ /^e[0-9]+$/) requested_id = edit_id = substr(a2, 2)
+		else if (a2 ~ /^[0-9]*$/)  requested_id = detail_id = a2
+		else                   { print "Unrecognized argument: " a2; exit 1 }
 	}
-	printing_all = ((task_to_fully_print == -1) && (task_to_edit == -1))
 }
 
-task_to_fully_print == NR {
-	print($0)
-	exit
-}
-
-task_to_edit == NR {
-	exit system(sprintf("vim %s +%d", ARGV[1], lines_read + 1))
-}
-
-$1 ~ /^[0-9]/ && printing_all {
-	num_words = split($1, words, " ")
-	s = sprintf("%s %3d  ", words[1], NR)
-	for (i = 2; i <= num_words; ++i) {
-		s = s sprintf("%s ", words[i])
-	}
-	tasks[NR + 1] = s
-}
-
-$1 !~ /^[0-9]/ && printing_all {
-	tasks[NR + 1] = sprintf("0          %3d  %s", NR, $1)
-}
-
-{
-	lines_read += NF + 1
-}
+NR == edit_id      { exit system(sprintf("vim %s +%d", ARGV[1], line + 1))  }
+edit_id != -1      { line += NF + 1; next                                   }
+NR == detail_id    { print $0; exit                                         }
+detail_id != -1    { next                                                   }
+$1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                   }
+$1 !~ date_regex   { s = sprintf("0          %3d  %s", NR, $1)              }
+                   { tasks[NR + 1] = s                                      }
 
 END {
-	if (printing_all) {
+	if (requested_id == -1) {
 		for (task in tasks) print(tasks[task]) | "sort"
+	} else if (NR != requested_id) {
+		print "Could not find task with ID = " requested_id
+		exit 1
 	}
 }
 
