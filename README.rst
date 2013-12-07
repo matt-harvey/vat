@@ -7,10 +7,11 @@ with Vim_.
 
 I wrote ``vat`` because I loved the simplicity of t_, but, for my own
 requirements at least, felt it lacked one or two useful features. Also I didn't
-feel the need for certain other features, such the hash-based task identifiers
-provided by t_, or the ability to retain tasks on file after they're
-completed. (In ``vat``, the only "formal" way to mark a task as completed
-is simply to delete it.)
+really have a need for certain other features, such as hash-based task
+identifiers, or the ability to formally mark as task as completed.
+(In ``vat``, the only "official" way to mark a task as completed is simply to
+delete it; though you could adopt a policy of prefixing the summary of a
+completed task with the word "DONE", if you felt the need.)
 
 ``vat`` is a small but significant step up from "just storing your todos in
 a text file". With ``vat``, you can do the following from the command line:
@@ -153,6 +154,8 @@ any whitespace.
 
 Contact
 =======
+
+You are welcome to contact me about this project at:
 
 vat@matthewharvey.net
 
