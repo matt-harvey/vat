@@ -36,11 +36,11 @@ function print_detailed_usage() {
 	print_basic_usage()
 	print "\nWith no options, prints summary list of tasks in FILE,",
 	      "sorted by due date.\n"
-	print "Options:\n",
-	      " h, -h, --help      show this help message and exit\n",
-	      " N, -N              print full text of task with ID N\n",
-	      " e, -e              open FILE in Vim\n",
-	      " eN, -eN            edit task with ID N\n"
+	print "Options:\n"
+	print "  h, -h, --help      show this help message and exit"
+	print "  N, -N              print full text of task with ID N"
+	print "  e, -e              open FILE in Vim"
+	print "  eN, -eN            edit task with ID N"
 	quick_exit = 1
 	exit
 }
@@ -74,7 +74,7 @@ edit_id != -1      { line += NF + 1; next                                   }
 NR == detail_id    { print $0; exit                                         }
 detail_id != -1    { next                                                   }
 $1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                   }
-$1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)              }
+$1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)               }
                    { tasks[NR + 1] = s                                      }
 
 END {
