@@ -17,8 +17,8 @@ completed task with the word "DONE", if you felt the need.)
 a text file". With ``vat``, you can do the following from the command line:
 
 - See a list of one-line task summaries sorted by due date.
-- See the full text of a specified task.
-- Open your todo file directly at specified task for rapid editing in Vim.
+- See the full text of a specified task, which might span multiple lines.
+- Open your todo file directly at a specified task for rapid editing in Vim.
 
 If you like the command line and Vim, then these few features should save you
 a lot of time and hastle, relative to the "mere text file" approach.
