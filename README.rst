@@ -1,20 +1,3 @@
-Copying
-=======
-
-Copyright 2013 Matthew Harvey
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
 Overview
 ========
 
@@ -23,24 +6,23 @@ inspired by t_.  It is designed to be used from the command line in conjunction
 with Vim_.
 
 I wrote ``vat`` because I loved the simplicity of ``t``, but, for my own
-requirements at least, felt it lacked a couple of useful features. Also I didn't
+requirements at least, felt it lacked one or two useful features. Also I didn't
 feel the need for certain other features, such the hash-based task identifiers
 provided by ``t``, or the ability to retain tasks on file after they're
-completed. (In ``vat``, the only official way to mark a task as completed
-is simply to delete it. Though, of course, you could always put your
-todo file into version control...)
+completed. (In ``vat``, the only "formal" way to mark a task as completed
+is simply to delete it.)
 
 ``vat`` is a small but significant step up from "just storing your todos in
 a text file". With ``vat``, you can do the following from the command line:
 
-- See a list of one-line task summaries from sorted by due date.
-- Ask to see the full detail for a particular task.
-- Open your todo file directly at particular task for rapid editing in Vim.
+- See a list of one-line task summaries sorted by due date.
+- See the full text of a specified task.
+- Open your todo file directly at specified task for rapid editing in Vim.
 
 If you like the command line and Vim, then these few features should save you
 a lot of time and hastle, relative to the "mere text file" approach.
 
-``vat`` is a minuscule ``awk`` script; you can easily hack it to
+``vat`` is a very small ``awk`` script; you can easily hack it to
 suit your own requirements.
 
 Dependencies
@@ -77,7 +59,7 @@ Here is an example of that format:
 ::
 
     2013-03-09
-    The first line can be thought of as a summary of the task.
+    The first line that isn't a date serves as a summary of the task.
     The rest is the body of the task. The task needn't have a body.
     Tasks are separated by blank lines.
 
@@ -120,7 +102,7 @@ Here is some sample output::
     0            5  This task has no due date and no body and that's fine.
     0            6  Buy milk.
     0            7  Do stuff.
-    2013-03-09   1  The first line can be thought of as a summary of the task. 
+    2013-03-09   1  The first line that isn't a date serves as a summary of the task. 
     2013-09-09   4  A task doesn't need to have a body. 
     2013-11-28   2  A date in this ISO format represents the date the task is due. 
 
@@ -128,19 +110,21 @@ This output can of course be piped to ``grep`` and other tools as you see fit.
 
 Note the task ID is ephemeral in the sense that if the task file is edited, the
 ID of any task is liable to change, including tasks that were not
-themselves edited.
+themselves edited. This purpose of the ID is simply to enable to user,
+immediately having viewed the summary output by ``vat``, to specify a
+particular task for viewing or editing, as will now be described.
 
-To display the date, summary *and detail* of a particular task::
+To display the date, summary *and detail* of a particular task, enter::
 
     vat [ID]
 
-For example, entering ``vat 2`` will produce the following::
+So, continuing with our example, entering ``vat 2`` will produce the following::
 
     2013-11-28
     A date in this ISO format represents the date the task is due.
     Put the date at the start of the first line.
 
-To add a new task::
+To create a new task, enter::
 
     vat e
 
@@ -162,9 +146,10 @@ of the task directly in Vim_, or, if desired, delete it entirely. Exit Vim_
 as usual with ``x`` or ``wq``, and you're done.
 
 For the sake of convention, the options detailed above also work with ``-``
-prefixed before the option. I.e. ``-e``, ``-e90`` and ``90`` are all valid.
+prefixed before the option. E.g. ``-e``, ``-e90`` and ``90`` are all valid.
 But the hyphen is entirely unnecessary. Note, however, that ``e 90`` and
-``-e 90`` are not valid: the number must not be separated from the ``e``.
+``-e 90`` are not valid: the ID must not be separated from the ``e`` by
+any whitespace.
 
 Contact
 =======

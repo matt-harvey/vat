@@ -1,18 +1,24 @@
-###
-# Copyright 2013 Matthew Harvey
+##
+# Copyright (c) 2013 Matthew Harvey
 # 
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-###
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+##
 
 awk '
 
@@ -20,19 +26,14 @@ function print_basic_usage() {
 	print "Usage: vat.awk [FILE] [options]"
 }
 
-function print_help_instruction() {
-	print "For more detail, enter: vat.awk --help."
-}
-
 function error(message) {
 	print message
 	print_basic_usage()
-	print_help_instruction()
-	quick_exit = 1
+	print "For more detail, enter: vat.awk --help."
 	exit 1
 }
 
-function print_detailed_usage() {
+function print_help_and_exit() {
 	print_basic_usage()
 	print "\nWith no options, prints summary list of tasks in FILE,",
 	      "sorted by due date.\n"
@@ -41,25 +42,24 @@ function print_detailed_usage() {
 	print "  N, -N              print full text of task with ID N"
 	print "  e, -e              open FILE in Vim"
 	print "  eN, -eN            edit task with ID N"
-	quick_exit = 1
 	exit
 }
 
 BEGIN {
 	RS = ""; FS = "\n"
-	id = detail_id = edit_id = -1
+	id = detail_id = edit_id = 0
 	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$/
 
-	# Mysterious bug occurred when used regex proper rather than
-	# "string-as-regex" here.
-	help_regex_str = "^(h|(-h)|(--help))$"
+	# Strange bug occurred when regex proper was used here, so storing
+	# regex in a string instead.
+	help_regex_s = "^(h|-h|--help)$"
 
-	if (ARGC < 2)                               error("Unsufficient arguments.")
-	else if (match(ARGV[1], help_regex_str))    print_detailed_usage()
-	else if (ARGC > 3)                          error("Too many arguments.")
+	if (ARGC < 2)                           error("Unsufficient arguments.")
+	else if (match(ARGV[1], help_regex_s))  print_help_and_exit()
+	else if (ARGC > 3)                      error("Too many arguments.")
 	else if (ARGC == 3) {
 		a2 = ARGV[2]
-		if (match(a2, help_regex_str))print_detailed_usage()
+		if (match(a2, help_regex_s))  print_help_and_exit()
 		else if (a2 ~ /^-?e$/)        exit system(sprintf("vim +0 %s", ARGV[1]))
 		else if (a2 ~ /^-?e[0-9]+$/)  id = edit_id = substr(a2, 2)
 		else if (a2 ~ /^-?[0-9]+$/)   id = detail_id = a2
@@ -70,19 +70,16 @@ BEGIN {
 }
 
 NR == edit_id      { exit system(sprintf("vim %s +%d", ARGV[1], line + 1))  }
-edit_id != -1      { line += NF + 1; next                                   }
+edit_id            { line += NF + 1; next                                   }
 NR == detail_id    { print $0; exit                                         }
-detail_id != -1    { next                                                   }
+detail_id          { next                                                   }
 $1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                   }
 $1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)               }
                    { tasks[NR + 1] = s                                      }
 
 END {
-	if (id == -1) {
-		for (task in tasks) print(tasks[task]) | "sort"
-	} else if ((NR != id) && !quick_exit) {
-		error("Could not find task with ID = " id)
-	}
+	if (!id)               for (task in tasks) print(tasks[task]) | "sort"
+	else if (NR != id)     error("Could not find task with ID = " id)
 }
 
 ' $*
