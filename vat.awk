@@ -38,9 +38,9 @@ function print_detailed_usage() {
 	      "sorted by due date.\n"
 	print "Options:\n",
 	      " h, -h, --help      show this help message and exit\n",
-	      " N, -N              print full text of task with ID = N\n",
+	      " N, -N              print full text of task with ID N\n",
 	      " e, -e              open FILE in Vim\n",
-	      " eN, -eN            edit task with ID = N\n"
+	      " eN, -eN            edit task with ID N\n"
 	quick_exit = 1
 	exit
 }
