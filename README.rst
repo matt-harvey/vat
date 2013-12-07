@@ -5,10 +5,10 @@ Overview
 inspired by t_.  It is designed to be used from the command line in conjunction
 with Vim_.
 
-I wrote ``vat`` because I loved the simplicity of ``t``, but, for my own
+I wrote ``vat`` because I loved the simplicity of t_, but, for my own
 requirements at least, felt it lacked one or two useful features. Also I didn't
 feel the need for certain other features, such the hash-based task identifiers
-provided by ``t``, or the ability to retain tasks on file after they're
+provided by t_, or the ability to retain tasks on file after they're
 completed. (In ``vat``, the only "formal" way to mark a task as completed
 is simply to delete it.)
 
