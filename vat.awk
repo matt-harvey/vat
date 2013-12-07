@@ -48,13 +48,18 @@ function print_detailed_usage() {
 BEGIN {
 	RS = ""; FS = "\n"
 	id = detail_id = edit_id = -1
-	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9])$/
-	if (ARGC < 2)                          error("Unsufficient arguments.")
-	else if (ARGV[1] ~ /^(h|-h|--help)$/)  print_detailed_usage()
-	else if (ARGC > 3)                     error("Too many arguments.")
+	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$/
+
+	# Mysterious bug occurred when used regex proper rather than
+	# "string-as-regex" here.
+	help_regex_str = "^(h|(-h)|(--help))$"
+
+	if (ARGC < 2)                               error("Unsufficient arguments.")
+	else if (match(ARGV[1], help_regex_str))    print_detailed_usage()
+	else if (ARGC > 3)                          error("Too many arguments.")
 	else if (ARGC == 3) {
 		a2 = ARGV[2]
-		if (a2 ~ /^(h|-h|--help)$/)   print_detailed_usage()
+		if (match(a2, help_regex_str))print_detailed_usage()
 		else if (a2 ~ /^-?e$/)        exit system(sprintf("vim +0 %s", ARGV[1]))
 		else if (a2 ~ /^-?e[0-9]+$/)  id = edit_id = substr(a2, 2)
 		else if (a2 ~ /^-?[0-9]+$/)   id = detail_id = a2
