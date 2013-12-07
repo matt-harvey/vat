@@ -110,7 +110,7 @@ This output can of course be piped to ``grep`` and other tools as you see fit.
 
 Note the task ID is ephemeral in the sense that if the task file is edited, the
 ID of any task is liable to change, including tasks that were not
-themselves edited. This purpose of the ID is simply to enable to user,
+themselves edited. The purpose of the ID is simply to enable to user,
 immediately having viewed the summary output by ``vat``, to specify a
 particular task for viewing or editing, as will now be described.
 
