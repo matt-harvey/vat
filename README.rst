@@ -8,8 +8,8 @@ with Vim_.
 I wrote ``vat`` because I loved the simplicity of t_, but, for my own
 requirements at least, felt it lacked one or two useful features. Also I didn't
 really have a need for certain other features, such as hash-based task
-identifiers, or the ability to formally mark as task as completed.
-(In ``vat``, the only "official" way to mark a task as completed is simply to
+identifiers, or the ability to formally mark tasks as completed.
+(In ``vat``, the "official" way to mark a task as completed is simply to
 delete it; though you could adopt a policy of prefixing the summary of a
 completed task with the word "DONE", if you felt the need.)
 
