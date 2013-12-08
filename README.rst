@@ -5,20 +5,12 @@ Overview
 inspired by t_.  It is designed to be used from the command line in conjunction
 with Vim_.
 
-I wrote ``vat`` because I loved the simplicity of t_, but, for my own
-requirements at least, felt it lacked one or two useful features. Also I didn't
-really have a need for certain other features, such as hash-based task
-identifiers, or the ability to formally mark tasks as completed.
-(In ``vat``, the "official" way to mark a task as completed is simply to
-delete it; though you could adopt a policy of prefixing the summary of a
-completed task with the word "DONE", if you felt the need.)
-
 ``vat`` is a small but significant step up from "just storing your todos in
 a text file". With ``vat``, you can do the following from the command line:
 
 - See a list of one-line task summaries sorted by due date.
-- See the full text of a specified task, which might span multiple lines.
 - Open your todo file directly at a specified task for rapid editing in Vim.
+- Output the full text of a specified task to the console.
 
 If you like the command line and Vim, then these few features should save you
 a lot of time and hastle, relative to the "mere text file" approach.
