@@ -22,6 +22,11 @@
 
 awk '
 
+############################## WARNING! ########################################
+# A single quote anywhwere in here (other than at the end) will confuse the    #
+# shell!                                                                       #
+################################################################################
+
 function print_basic_usage() {
 	print "Usage: vat.awk [FILE] [options]"
 }
@@ -47,7 +52,6 @@ function print_help_and_exit() {
 
 BEGIN {
 	RS = ""; FS = "\n"
-	id = detail_id = edit_id = 0
 	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$/
 
 	# Strange bug occurred when regex proper was used here, so storing
@@ -69,16 +73,26 @@ BEGIN {
 	}
 }
 
-NR == edit_id      { exit system(sprintf("vim %s +%d", ARGV[1], line + 1))  }
-edit_id            { line += NF + 1; next                                   }
-NR == detail_id    { print $0; exit                                         }
-detail_id          { next                                                   }
-$1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                   }
-$1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)               }
-                   { tasks[NR + 1] = s                                      }
+# Guard against "blank" line containing whitespace, which would mess with the
+# record separation logic. Better just abort.
+$0 ~ /(^|\n)[ \t]+(\n|$)/ {
+	printf("ERROR! Record commencing at line %d contains hidden whitespace.\n",
+	  line + 1)
+	for (i in tasks) delete tasks[i]
+	id = 0
+	exit 1
+}
+
+NR == edit_id      { exit system(sprintf("vim %s +%d", ARGV[1], line + 1))     }
+                   { line += NF + 1                                            }
+NR == detail_id    { print $0; exit                                            }
+id != 0            { next                                                      }
+$1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                      }
+$1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)                  }
+                   { tasks[NR] = s                                             }
 
 END {
-	if (!id)               for (task in tasks) print(tasks[task]) | "sort"
+	if (!id)               for (i in tasks) print(tasks[i]) | "sort"
 	else if (NR != id)     error("Could not find task with ID = " id)
 }
 
