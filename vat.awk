@@ -52,10 +52,10 @@ function print_help_and_exit() {
 
 BEGIN {
 	RS = ""; FS = "\n"
-	date_regex = /^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$/
 
-	# Strange bug occurred when regex proper was used here, so storing
-	# regex in a string instead.
+	# Strange bugs have occurred when these regexes were stored in variables
+	# AS regexes; so storing them as strings instead.
+	date_regex = "^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$"
 	help_regex_s = "^(h|-h|--help)$"
 
 	if (ARGC < 2)                           error("Unsufficient arguments.")
@@ -83,13 +83,13 @@ $0 ~ /(^|\n)[ \t]+(\n|$)/ {
 	exit 1
 }
 
-NR == edit_id      { exit system(sprintf("vim %s +%d", ARGV[1], line + 1))     }
-                   { line += NF + 1                                            }
-NR == detail_id    { print $0; exit                                            }
-id != 0            { next                                                      }
-$1 ~ date_regex    { s = sprintf("%s %3d %s", $1, NR, $2)                      }
-$1 !~ date_regex   { s = sprintf("0          %3d %s", NR, $1)                  }
-                   { tasks[NR] = s                                             }
+NR == edit_id          { exit system(sprintf("vim %s +%d", ARGV[1], line + 1)) }
+                       { line += NF + 1                                        }
+NR == detail_id        { print $0; exit                                        }
+id != 0                { next                                                  }
+match($1, date_regex)  { s = sprintf("%s %3d %s", $1, NR, $2)                  }
+!match($1, date_regex) { s = sprintf("0          %3d %s", NR, $1)              }
+                       { tasks[NR] = s                                         }
 
 END {
 	if (!id)               for (i in tasks) print(tasks[i]) | "sort"
