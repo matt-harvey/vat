@@ -80,6 +80,16 @@ Here is an example of that format:
 
     Do stuff.
 
+Note the following "gotchas":
+
+- The lines separating the tasks must be *completely blank*.
+  If they contain whitespace then this can confuse the program. If there are
+  any such "whitespace-only" lines, then ``vat`` will detect these and abort
+  with an error message.
+- If tasks are separated by two or more consecutive blank lines, rather than
+  a single blank line, this will confuse the program when it is calculating
+  the position of each task in the file. Only use a single blank line to
+  separate tasks.
 
 Command line usage
 ------------------
@@ -131,10 +141,10 @@ To create a new task, enter::
 
 This will open the task file in Vim_, at the first line. You can then hit
 "CTRL-O" and start writing a new task at the top of the file. Be sure to leave
-a blank line between it and the next task. Note you can add a new task anywhere
-in the file - order isn't relevant - as long as it's separated from adjacent
-tasks by a blank line. Exit Vim as usual with ``x`` or ``wq`` to save the new
-task.
+a single blank line between it and the next task. Note you can add a new task
+anywhere in the file - order isn't relevant - as long as it's separated from
+adjacent tasks by a single blank line. Exit Vim as usual with ``x`` or ``wq`` to
+save the new task.
 
 To edit or delete a task::
 
