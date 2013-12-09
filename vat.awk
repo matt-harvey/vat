@@ -112,12 +112,12 @@ match($1, date_regex)  { s = sprintf("%s %s %s", $1, assigned_id, $2)          }
 END {
 	if (!requested_id) {
 		for (i in tasks) {
-			# After sorting, we remove the extra zeroes which we put in front
-			# of things so that would work.
-			# WARNING This is all very hacky and might cause unwanted
-			# substitutions in the summary column.
-			print(tasks[i]) | \
-				"sort | sed \"s/^0/ /\" | sed \"s/ 0/  /\" | sed \"s/ 0/  /\""
+			# We pipe through sort; then we remove the extra zeroes that we put
+			# in front of things so that sorting would work.
+			cull_date_zero = "sed \"s/^0/ /\""
+			cull_id_zero = "sed -r \"/^( |([0-9]|-){10}) +0/s/ 0/  /\""
+			print(tasks[i]) | "sort | " \
+				cull_date_zero " | " cull_id_zero " | " cull_id_zero
 		}
 	} else if (NR != requested_id) {
 		error("Could not find task with ID = " requested_id)

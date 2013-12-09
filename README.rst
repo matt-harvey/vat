@@ -183,10 +183,6 @@ Known issues
   a single blank line, this will confuse the program when it is calculating
   the position of each task in the file. ``vat`` will not detect or warn
   about this occurring.
-- If there are any words in the summary line of a task that start with one
-  or more "0"s, then ``vat`` will remove these zeroes when outputting the
-  summary list to the console. This is a side effect of the hacks it performs
-  to sort records properly.
 - ``vat`` will abort with an error message if there are 1000 or more tasks
   in the task file.
 
