@@ -172,7 +172,7 @@ any whitespace.
 Known issues
 ------------
 
-``vat`` is a dirty little hack involving ``awk``, ``sort`` and
+``vat`` is a quick and dirty hack involving ``awk``, ``sort`` and
 ``sed``. It has some issues:
 
 - The lines separating the tasks in the tasks file must be *completely blank*.
