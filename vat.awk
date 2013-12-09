@@ -23,7 +23,7 @@
 awk '
 
 ############################## WARNING! ########################################
-# A single quote anywhwere in here (other than at the end) will confuse the    #
+# A single quote anywhere in here (other than at the end) will confuse the     #
 # shell!                                                                       #
 ################################################################################
 
