@@ -70,7 +70,7 @@ BEGIN {
 		else if (a2 ~ /^-?[0-9]+$/)   requested_id = detail_id = a2
 		else                          error("Unrecognized argument: " a2)
 	} else {
-		print "DUE        ID  SUMMARY"
+		print "DUE         ID SUMMARY"
 	}
 }
 
