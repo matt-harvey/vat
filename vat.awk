@@ -53,8 +53,9 @@ function print_help_and_exit() {
 BEGIN {
 	RS = ""; FS = "\n"
 
-	# Strange bugs have occurred when these regexes were stored in variables
-	# AS regexes; so storing them as strings instead.
+	# Note it is important that we store these regexes as strings rather
+	# than as slash-delimited regex constants. See:
+	#  https://www.gnu.org/software/gawk/manual/gawk.html#Using-Constant-Regexps
 	date_regex = "^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$"
 	help_regex_s = "^(h|-h|--help)$"
 
