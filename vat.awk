@@ -27,24 +27,23 @@ awk '
 # shell!                                                                       #
 ################################################################################
 
-function print_basic_usage() {
-	print "Usage: vat.awk [FILE] [options]"
+function get_basic_usage() {
+	return "Usage: vat.awk [FILE] [options]"
 }
 
 function error(message) {
-	print message
+	print message | "cat 1>&2"
 	exit 1
 }
 
 function usage_error(message) {
-	print message
-	print_basic_usage()
-	print "For more detail, enter: vat.awk --help."
+	print message "\n" get_basic_usage() \
+		"\nFor more detail, enter: vat.awk --help." | "cat 1>&2"
 	exit 1
 }
 
 function print_help_and_exit() {
-	print_basic_usage()
+	print get_basic_usage()
 	print "\nWith no options, prints summary list of tasks in FILE,",
 	      "sorted by due date.\n"
 	print "Options:\n"
@@ -84,8 +83,8 @@ BEGIN {
 $0 ~ /(^|\n)[ \t]+(\n|$)/ {
 	for (i in tasks) delete tasks[i]
 	id = 0
-	error("ERROR! Record commencing at line %d contains hidden whitespace.\n",
-	  line + 1)
+	error(sprintf("ERROR! Record commencing at line %d contains hidden whitespace.\n",
+	  line + 1))
 }
 
 NR == edit_id          { exit system(sprintf("vim %s +%d", ARGV[1], line + 1)) }
