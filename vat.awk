@@ -27,19 +27,23 @@ awk '
 # shell!                                                                       #
 ################################################################################
 
-function print_basic_usage() {
-	print "Usage: vat.awk [FILE] [options]"
+function get_basic_usage() {
+	return "Usage: vat.awk [FILE] [options]"
 }
 
 function error(message) {
-	print message
-	print_basic_usage()
-	print "For more detail, enter: vat.awk --help."
+	print message | "cat 1>&2"
+	exit 1
+}
+
+function usage_error(message) {
+	print message "\n" get_basic_usage() \
+		"\nFor more detail, enter: vat.awk --help." | "cat 1>&2"
 	exit 1
 }
 
 function print_help_and_exit() {
-	print_basic_usage()
+	print get_basic_usage()
 	print "\nWith no options, prints summary list of tasks in FILE,",
 	      "sorted by due date.\n"
 	print "Options:\n"
@@ -59,16 +63,16 @@ BEGIN {
 	date_regex = "^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$"
 	help_regex_s = "^(h|-h|--help)$"
 	max_tasks = 999; max_id_width = 3
-	if (ARGC < 2)                           error("Unsufficient arguments.")
+	if (ARGC < 2)                         usage_error("Unsufficient arguments.")
 	else if (match(ARGV[1], help_regex_s))  print_help_and_exit()
-	else if (ARGC > 3)                      error("Too many arguments.")
+	else if (ARGC > 3)                    usage_error("Too many arguments.")
 	else if (ARGC == 3) {
 		a2 = ARGV[2]
 		if (match(a2, help_regex_s))  print_help_and_exit()
 		else if (a2 ~ /^-?e$/)        exit system(sprintf("vim +0 %s", ARGV[1]))
-		else if (a2 ~ /^-?e[0-9]+$/)  requested_id = edit_id = substr(a2, 2)
-		else if (a2 ~ /^-?[0-9]+$/)   requested_id = detail_id = a2
-		else                          error("Unrecognized argument: " a2)
+		else if (a2 ~ /^-?e[0-9]+$/)  id = edit_id = substr(a2, 2)
+		else if (a2 ~ /^-?[0-9]+$/)   id = detail_id = a2
+		else                          usage_error("Unrecognized argument: " a2)
 	} else {
 		print "DUE         ID SUMMARY"
 	}
@@ -77,11 +81,10 @@ BEGIN {
 # Guard against "blank" line containing whitespace, which would mess with the
 # record separation logic. Better just abort.
 $0 ~ /(^|\n)[ \t]+(\n|$)/ {
-	printf("ERROR! Record commencing at line %d contains hidden whitespace.\n",
-	  line + 1)
 	for (i in tasks) delete tasks[i]
 	requested_id = 0
-	exit 1
+	error(sprintf("ERROR! Record commencing at line %d contains hidden whitespace.\n",
+	  line + 1))
 }
 
 NR == edit_id          { exit system(sprintf("vim %s +%d", ARGV[1], line + 1)) }
