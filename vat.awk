@@ -119,8 +119,8 @@ END {
 			# in front of things so that sorting would work.
 			cull_date_zero = "sed \"s/^0/ /\""
 			cull_id_zero = "sed -r \"/^( |([0-9]|-){10}) +0/s/ 0/  /\""
-			print(tasks[i]) | "sort | " \
-				cull_date_zero " | " cull_id_zero " | " cull_id_zero
+			print(tasks[i]) | \
+				("sort | " cull_date_zero " | " cull_id_zero " | " cull_id_zero)
 		}
 	} else if (NR != requested_id) {
 		error("Could not find task with ID = " requested_id)
