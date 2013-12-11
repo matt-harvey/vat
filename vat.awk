@@ -68,10 +68,12 @@ BEGIN {
 	else if (ARGC > 3)                    usage_error("Too many arguments.")
 	else if (ARGC == 3) {
 		a2 = ARGV[2]
-		if (match(a2, help_regex))  print_help_and_exit()
+		if (match(a2, help_regex))    print_help_and_exit()
 		else if (a2 ~ /^-?e$/)        exit system(sprintf("vim +0 %s", ARGV[1]))
-		else if (a2 ~ /^-?e[0-9]+$/)  id = edit_id = substr(a2, 2)
-		else if (a2 ~ /^-?[0-9]+$/)   id = detail_id = a2
+		else if (a2 ~ /^e[0-9]+$/)    id = edit_id = substr(a2, 2)
+		else if (a2 ~ /^-e[0-9]+$/)   id = edit_id = substr(a2, 3)
+		else if (a2 ~ /^[0-9]+$/)     id = detail_id = a2
+		else if (a2 ~ /^-[0-9]+$/)    id = detail_id = substr(a2, 2)
 		else                          usage_error("Unrecognized argument: " a2)
 	} else {
 		print "DUE         ID SUMMARY"
