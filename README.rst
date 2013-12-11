@@ -44,8 +44,12 @@ suit your own requirements.
 Dependencies
 ============
 
-``vat`` should work on any Unix-like system on which ``awk``, ``sort`` and
-``vim`` are available.
+``vat`` should work on any Unix-like system on which ``awk``, ``sort``, ``cat``
+and ``vim`` are available.
+
+As far as specific implementations of ``awk`` are concerned, ``vat`` is known to
+work with GNU Awk 4.0.2 and ``nawk`` version 20121220; but it should work with
+any other non-ancient implementation.
 
 To get the most out of ``vat``, it's best if you're familiar with Vim_.
 
