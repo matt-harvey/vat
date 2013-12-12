@@ -44,8 +44,8 @@ suit your own requirements.
 Dependencies
 ============
 
-``vat`` should work on any Unix-like system on which ``awk``, ``sort``, ``cat``
-and ``vim`` are available.
+``vat`` should work on any Unix-like system on which ``awk``, ``sort``, ``sed``,
+``cat`` and ``vim`` are available.
 
 As far as specific implementations of ``awk`` are concerned, ``vat`` is known to
 work with GNU Awk 4.0.2 and ``nawk`` version 20121220; but it should work with
@@ -88,7 +88,7 @@ Here is an example of that format:
     Put the date at the start of the first line.
 
     This task doesn't have a due date.
-    That's OK. Also note the tasks can be in any order in the file.
+    That's OK.
 
     2013-09-09
     A task doesn't need to have a body.
@@ -98,17 +98,6 @@ Here is an example of that format:
     Buy milk.
 
     Do stuff.
-
-Note the following "gotchas":
-
-- The lines separating the tasks must be *completely blank*.
-  If they contain whitespace then this can confuse the program. If there are
-  any such "whitespace-only" lines, then ``vat`` will detect these and abort
-  with an error message.
-- If tasks are separated by two or more consecutive blank lines, rather than
-  a single blank line, this will confuse the program when it is calculating
-  the position of each task in the file. Only use a single blank line to
-  separate tasks.
 
 Command line usage
 ------------------
@@ -121,17 +110,18 @@ To display all task summaries ordered by due date::
     vat
 
 This will output the due date, ID and summary of each task. Tasks that
-don't have a date will be listed first (these in no particular order), and
-will have a ``0`` in the date column. Tasks with due dates will then be
-listed, in ascending order of date.
+don't have a date will be listed first, in the same order in which
+they appear in the tasks file. Tasks with due dates will then be
+listed, in ascending order of date. Tasks sharing the same date appear
+in the same relative order as in the tasks file.
 
 Here is some sample output::
 
     DUE         ID  SUMMARY
-    0            3  This task doesn't have a due date.
-    0            5  This task has no due date and no body and that's fine.
-    0            6  Buy milk.
-    0            7  Do stuff.
+                 3  This task doesn't have a due date.
+                 5  This task has no due date and no body and that's fine.
+                 6  Buy milk.
+                 7  Do stuff.
     2013-03-09   1  The first line that isn't a date serves as a summary of the task. 
     2013-09-09   4  A task doesn't need to have a body. 
     2013-11-28   2  A date in this ISO format represents the date the task is due. 
@@ -154,16 +144,13 @@ So, continuing with our example, entering ``vat 2`` will produce the following::
     A date in this ISO format represents the date the task is due.
     Put the date at the start of the first line.
 
-To create a new task, enter::
+To create a new task at the top of the tasks file, enter::
 
     vat e
 
-This will open the task file in Vim_, at the first line. You can then hit
+This will open the tasks file in Vim_, at the first line. You can then hit
 "CTRL-O" and start writing a new task at the top of the file. Be sure to leave
-a single blank line between it and the next task. Note you can add a new task
-anywhere in the file - order isn't relevant - as long as it's separated from
-adjacent tasks by a single blank line. Exit Vim as usual with ``x`` or ``wq`` to
-save the new task.
+a single blank line between it and the next task.
 
 To edit or delete a task::
 
@@ -175,11 +162,33 @@ positioned on the task with an ID of ``6``. You then edit the text
 of the task directly in Vim_, or, if desired, delete it entirely. Exit Vim_
 as usual with ``x`` or ``wq``, and you're done.
 
+The ``vat e[ID]`` invocation can also be used when you want to enter a new
+task at a specific location in the file, adjacent to some existing task.
+Just be sure to leave a single blank line between the new task and any
+adjacent tasks.
+
 For the sake of convention, the options detailed above also work with ``-``
 prefixed before the option. E.g. ``-e``, ``-e90`` and ``90`` are all valid.
 But the hyphen is entirely unnecessary. Note, however, that ``e 90`` and
 ``-e 90`` are not valid: the ID must not be separated from the ``e`` by
 any whitespace.
+
+Known issues
+------------
+
+``vat`` is a quick and dirty hack involving ``awk``, ``sort`` and
+``sed``. It has some issues:
+
+- The lines separating the tasks in the tasks file must be *completely blank*.
+  If they contain whitespace then this can confuse the program. If there are
+  any such "whitespace-only" lines, then ``vat`` will detect these and abort
+  with an error message.
+- If tasks are separated by two or more consecutive blank lines, rather than
+  a single blank line, this will confuse the program when it is calculating
+  the position of each task in the file. ``vat`` will not detect or warn
+  about this occurring.
+- ``vat`` will abort with an error message if there are 1000 or more tasks
+  in the task file.
 
 Contact
 =======
