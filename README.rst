@@ -127,6 +127,9 @@ Here is some sample output::
     2013-11-28   2  A date in this ISO format represents the date the task is due. 
 
 This output can of course be piped to ``grep`` and other tools as you see fit.
+For example, if you put a project-specific string at the start of each summary
+line, you can use ``grep`` to filter the output of ``vat`` to see the tasks for
+a given project.
 
 Note the task ID is ephemeral in the sense that if the task file is edited, the
 ID of any task is liable to change, including tasks that were not
