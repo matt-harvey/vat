@@ -44,12 +44,8 @@ suit your own requirements.
 Dependencies
 ============
 
-``vat`` should work on any Unix-like system on which ``awk``, ``sort``,
-``cat``, ``vim`` and the GNU version of ``sed`` are available.
-
-It will not work with the BSD version of ``sed`` (the one that comes with
-Mac OSX); however it can be made to work with this ``sed`` easily, by changing
-each occurrence of ``sed -r`` to ``sed -E``.
+``vat`` should work on any Unix-like system on which ``awk``, ``sort`` and ``cat``
+are available.
 
 As far as specific implementations of ``awk`` are concerned, ``vat`` is known to
 work with GNU Awk 4.0.2 and ``nawk`` version 20121220; but it should work with
@@ -180,8 +176,7 @@ any whitespace.
 Known issues
 ------------
 
-``vat`` is a quick and dirty hack involving ``awk``, ``sort`` and
-``sed``. It has some issues:
+``vat`` is a quick and dirty hack.
 
 - The lines separating the tasks in the tasks file must be *completely blank*.
   If they contain whitespace then this can confuse the program. If there are
@@ -193,8 +188,6 @@ Known issues
   about this occurring.
 - ``vat`` will abort with an error message if there are 1000 or more tasks
   in the task file.
-- ``vat`` will not work unaltered with the BSD version of ``sed`` (but see
-  under Dependencies_ for a solution).
 
 Contact
 =======

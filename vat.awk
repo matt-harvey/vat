@@ -1,5 +1,5 @@
 ##
-# Copyright (c) 2013 Matthew Harvey
+# Copyright (c) 2013, 2015 Matthew Harvey
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -62,7 +62,10 @@ BEGIN {
     #  https://www.gnu.org/software/gawk/manual/gawk.html#Using-Constant-Regexps
     date_regex = "^([1-9][0-9][0-9][0-9])-([0-1][0-9])-([0-3][0-9]) *$"
     help_regex = "^(h|-h|--help)$"
-    max_tasks = 999; max_id_width = 3
+
+    max_tasks = 999
+    max_id_width = length(max_tasks)
+
     if (ARGC < 2)                         usage_error("Unsufficient arguments.")
     else if (match(ARGV[1], help_regex))  print_help_and_exit()
     else if (ARGC > 3)                    usage_error("Too many arguments.")
@@ -91,39 +94,27 @@ $0 ~ /(^|\n)[ \t]+(\n|$)/ {
 
 NR == edit_id          { exit system(sprintf("vim %s +%d", ARGV[1], line + 1)) }
 
-                       { line += NF + 1                                        }
+                       { line += NF + 1 }
 
-NR == detail_id        { print $0; exit                                        }
+NR == detail_id        { print $0; exit }
 
-requested_id != 0      { next                                                  }
+requested_id != 0      { next }
 
 {
     len = length(NR)
     if (NR > max_tasks) error("Too many tasks. Cannot process safely.")
     assigned_id = NR
-
-    # Add zeroes to the front of the assigned id so they are all the same width.
-    # This is a hack to make sort work (below) regardless of the number of
-    # digits.
-    for (i = max_id_width; i != len; --i) assigned_id = 0 assigned_id
 }
 
-match($1, date_regex)  { s = sprintf("%s %s %s", $1, assigned_id, $2)          }
+match($1, date_regex)  { s = sprintf("%s %" max_id_width ".d %s", $1, assigned_id, $2) }
 
-!match($1, date_regex) { s = sprintf("0          %s %s", assigned_id, $1)      }
+!match($1, date_regex) { s = sprintf("           %" max_id_width ".d %s", assigned_id, $1) }
 
-                       { tasks[assigned_id] = s                                }
+                       { tasks[assigned_id] = s }
 
 END {
     if (!requested_id) {
-        for (i in tasks) {
-            # We pipe through sort; then we remove the extra zeroes that we put
-            # in front of things so that sorting would work.
-            cull_date_zero = "sed \"s/^0/ /\""
-            cull_id_zero = "sed -r \"/^( |([0-9]|-){10}) +0/s/ 0/  /\""
-            print(tasks[i]) | \
-                ("sort | " cull_date_zero " | " cull_id_zero " | " cull_id_zero)
-        }
+        for (i in tasks) print(tasks[i]) | "sort -n"
     } else if (NR != requested_id) {
         error("Could not find task with ID = " requested_id)
     }
