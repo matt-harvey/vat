@@ -194,7 +194,7 @@ Contact
 
 You are welcome to contact me about this project at:
 
-vat@matthewharvey.net
+software@matthewharvey.net
 
 .. References
 .. _Vim: http://www.vim.org
