@@ -20,13 +20,6 @@
 # THE SOFTWARE.
 ##
 
-awk '
-
-############################## WARNING! ########################################
-# A single quote anywhere in here (other than at the end) will confuse the     #
-# shell!                                                                       #
-################################################################################
-
 function get_basic_usage() {
     return "Usage: vat.awk [FILE] [options]"
 }
@@ -119,5 +112,3 @@ END {
         error("Could not find task with ID = " requested_id)
     }
 }
-
-' $*

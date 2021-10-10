@@ -33,13 +33,12 @@ To get the most out of ``vat``, it's best if you're familiar with Vim_.
 Installation
 ============
 
-- ``chmod +x vat.awk``
 - Copy ``vat.awk`` into a directory of your choosing.
-- Create a text file somewhere to record your tasks.
+- Create a blank text file somewhere to record your tasks (``touch /path/to/file``).
 - Add something like the following line to your ``.bashrc`` (or ``.zshrc`` or
   etc.)::
 
-    alias vat='/path/to/vat.awk /path/to/text/file/containing/tasks'
+    alias vat='awk -f /path/to/vat.awk /path/to/text/file/containing/tasks'
 
 Usage
 =====
